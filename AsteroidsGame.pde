@@ -7,9 +7,19 @@ public void draw()
 {
   //your code here
 }
-class SpaceShip //extends Floater  
+class SpaceShip extends Floater  
 {   
     //your code here
+    public int getX(){return (int)myCenterX}; 
+    public void setX(int x){myCenterX=x};
+    public void setY(int y){myCenterY=y};   
+    public int getY(){return (int)myCenterY};   
+    public void setDirectionX(double x){myDirectionX=x};   
+    public double getDirectionX(){return (double)myDirectionX};   
+    public void setDirectionY(double y){myDirectionY=y};   
+    public double getDirectionY(){return (double)myDirectionY};   
+    public void setPointDirection(int degrees){myPointDirection=degrees};   
+    public double getPointDirection(){return (double)myPointDirection}; 
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -19,9 +29,9 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   protected int myColor;   
   protected double myCenterX, myCenterY; //holds center coordinates   
   protected double myDirectionX, myDirectionY; //holds x and y coordinates of the vector for direction of travel   
-  protected double myPointDirection; //holds current direction the ship is pointing in degrees    
-  abstract public void setX(int x);  
-  abstract public int getX();   
+  protected double myPointDirection; //holds current direction the ship is pointing in degrees     
+  abstract public int getX();  
+  abstract public void setX(int x); 
   abstract public void setY(int y);   
   abstract public int getY();   
   abstract public void setDirectionX(double x);   
