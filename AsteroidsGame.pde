@@ -1,25 +1,67 @@
 //your variable declarations here
+//key pressers
+boolean leftIsPressed = false;
+boolean rightIsPressed = false;
+boolean upIsPressed = false;
+SpaceShip s;
 public void setup() 
 {
+  size(500,500);
+  
+   s = new SpaceShip();
   //your code here
 }
 public void draw() 
 {
-  //your code here
+  background(0, 0, 0);
+  //spaceship activate
+  s.show();
+  s.move();
+  //key related stuff
+  //rotation
+  if(leftIsPressed==true){
+
+    s.rotate(-2);
+  }
+  if(rightIsPressed==true){
+
+    s.rotate(2);
+  }
+  if(upIsPressed==true){
+
+    s.accelerate(0.1);
+  }
 }
 class SpaceShip extends Floater  
 {   
     //your code here
-    public int getX(){return (int)myCenterX}; 
-    public void setX(int x){myCenterX=x};
-    public void setY(int y){myCenterY=y};   
-    public int getY(){return (int)myCenterY};   
-    public void setDirectionX(double x){myDirectionX=x};   
-    public double getDirectionX(){return (double)myDirectionX};   
-    public void setDirectionY(double y){myDirectionY=y};   
-    public double getDirectionY(){return (double)myDirectionY};   
-    public void setPointDirection(int degrees){myPointDirection=degrees};   
-    public double getPointDirection(){return (double)myPointDirection}; 
+    public SpaceShip(){
+      corners=3;  //the number of corners, a triangular floater has 3   
+      xCorners=new int[corners];
+      yCorners=new int[corners];
+      xCorners[0]=-8;
+      xCorners[1]=16;
+      xCorners[2]=-8;
+      yCorners[0]=-8;
+      yCorners[1]=0;
+      yCorners[2]=8;
+      myColor=color(51,255,51);   
+      myCenterX=250;
+       myCenterY=250; //holds center coordinates   
+      myDirectionX=0;
+       myDirectionY=0; //holds x and y coordinates of the vector for direction of travel   
+      myPointDirection=0;
+    }
+    public int getX(){return (int)myCenterX;} 
+    public void setX(int x){myCenterX=x;}
+    public void setY(int y){myCenterY=y;}   
+    public int getY(){return (int)myCenterY;}   
+    public void setDirectionX(double x){myDirectionX=x;}   
+    public double getDirectionX(){return (double)myDirectionX;}   
+    public void setDirectionY(double y){myDirectionY=y;}   
+    public double getDirectionY(){return (double)myDirectionY;}   
+    public void setPointDirection(int degrees){myPointDirection=degrees;}   
+    public double getPointDirection(){return (double)myPointDirection;} 
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -97,4 +139,33 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     endShape(CLOSE);  
   }   
 } 
-
+void keyPressed()
+{
+  if(keyCode==37)
+  {
+    leftIsPressed = true;
+  }
+   else if(keyCode==38)
+  {
+    upIsPressed = true;
+  }
+  else if (keyCode == 39)
+  {
+    rightIsPressed = true;
+  }
+}
+void keyReleased()
+{
+  if(keyCode==37)
+  {
+    leftIsPressed = false;
+  }
+  else if (keyCode == 39)
+  {
+    rightIsPressed = false;
+  }
+  else if  (keyCode==38)
+  {
+    upIsPressed = false;
+  }
+}
