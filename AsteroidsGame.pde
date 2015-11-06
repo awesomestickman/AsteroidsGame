@@ -3,17 +3,31 @@
 boolean leftIsPressed = false;
 boolean rightIsPressed = false;
 boolean upIsPressed = false;
+boolean zIsPressed = false;
+boolean hyperSpeed=false;
+
+
+int [] starFieldx = new int[50];
+int [] starFieldy = new int[50];
+
+
 SpaceShip s;
 public void setup() 
 {
-  size(500,500);
+
+  size(800,500);
+  starCreate();
   
    s = new SpaceShip();
   //your code here
 }
 public void draw() 
 {
+  if(hyperSpeed==false){
   background(0, 0, 0);
+}
+//stars
+starCycle();
   //spaceship activate
   s.show();
   s.move();
@@ -22,6 +36,15 @@ public void draw()
   if(leftIsPressed==true){
 
     s.rotate(-2);
+  }
+  if(zIsPressed==true){
+
+    s.hyperSpace();
+    starCreate();
+    hyperSpeed=true;
+  }
+  else{
+hyperSpeed=false;
   }
   if(rightIsPressed==true){
 
@@ -62,6 +85,15 @@ class SpaceShip extends Floater
     public double getDirectionY(){return (double)myDirectionY;}   
     public void setPointDirection(int degrees){myPointDirection=degrees;}   
     public double getPointDirection(){return (double)myPointDirection;} 
+
+    public void hyperSpace(){
+      myCenterX=(Math.random()*600)+50;
+      myCenterY=(Math.random()*400)+50;
+      myPointDirection=(Math.random()*360);
+      myDirectionY=0;
+      myDirectionX=0;
+
+    }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -149,6 +181,10 @@ void keyPressed()
   {
     upIsPressed = true;
   }
+  else if(keyCode==90)
+  {
+    zIsPressed = true;
+  }
   else if (keyCode == 39)
   {
     rightIsPressed = true;
@@ -168,4 +204,25 @@ void keyReleased()
   {
     upIsPressed = false;
   }
+  else if(keyCode==90)
+  {
+    zIsPressed = false;
+  }
+}
+
+public void starCreate(){
+for(int i =0;i<starFieldx.length;i++){
+starFieldx[i]=(int)(Math.random()*800);
+starFieldy[i]=(int)(Math.random()*500);
+  
+}
+
+}
+public void starCycle(){
+for(int i =0;i<starFieldx.length;i++){
+
+ 
+  ellipse(starFieldx[i],starFieldy[i],1,1);
+}
+
 }
