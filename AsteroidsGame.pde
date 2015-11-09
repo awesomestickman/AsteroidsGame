@@ -10,15 +10,18 @@ boolean hyperSpeed=false;
 int [] starFieldx = new int[50];
 int [] starFieldy = new int[50];
 
-
+Asteroids [] aBelt = new Asteroids[10];
 SpaceShip s;
+
 public void setup() 
 {
 
   size(800,500);
   starCreate();
+  aCreate();
   
    s = new SpaceShip();
+   
   //your code here
 }
 public void draw() 
@@ -28,9 +31,13 @@ public void draw()
 }
 //stars
 starCycle();
+aCycle();
   //spaceship activate
+  if(dead=="false"){
   s.show();
   s.move();
+}
+ 
   //key related stuff
   //rotation
   if(leftIsPressed==true){
@@ -41,10 +48,11 @@ starCycle();
 
     s.hyperSpace();
     starCreate();
+    aCreate();
     hyperSpeed=true;
   }
   else{
-hyperSpeed=false;
+ hyperSpeed=false;
   }
   if(rightIsPressed==true){
 
@@ -55,19 +63,64 @@ hyperSpeed=false;
     s.accelerate(0.1);
   }
 }
+ class Asteroids extends Floater
+   {
+  private int rotSpeed;
+
+  public Asteroids(){
+    rotSpeed=(int)(Math.random()*10);
+    corners=5;  //the number of corners, a triangular floater has 3   
+      xCorners=new int[corners];
+      yCorners=new int[corners];
+      xCorners[0]=0;
+      xCorners[1]=12;
+      xCorners[2]=8;
+       xCorners[3]=-8;
+        xCorners[4]=-12;
+      yCorners[0]=9;
+      yCorners[1]=7;
+      yCorners[2]=-7;
+      yCorners[3]=-7;
+        yCorners[4]=7;
+      myColor=color(51,255,51);   
+      myCenterX=(int)(Math.random()*800);
+       myCenterY=(int)(Math.random()*500); //holds center coordinates   
+      myDirectionX=(int)(Math.random()*6)-3;
+       myDirectionY=(int)(Math.random()*6)-3; //holds x and y coordinates of the vector for direction of travel   
+      myPointDirection=0;
+  }
+
+  public void move(){
+rotate(rotSpeed);
+  super.move();
+  }
+  public int getX(){return (int)myCenterX;} 
+    public void setX(int x){myCenterX=x;}
+    public void setY(int y){myCenterY=y;}   
+    public int getY(){return (int)myCenterY;}   
+    public void setDirectionX(double x){myDirectionX=x;}   
+    public double getDirectionX(){return (double)myDirectionX;}   
+    public void setDirectionY(double y){myDirectionY=y;}   
+    public double getDirectionY(){return (double)myDirectionY;}   
+    public void setPointDirection(int degrees){myPointDirection=degrees;}   
+    public double getPointDirection(){return (double)myPointDirection;} 
+
+}
 class SpaceShip extends Floater  
 {   
     //your code here
+     boolean dead;
     public SpaceShip(){
+      dead="false";
       corners=3;  //the number of corners, a triangular floater has 3   
       xCorners=new int[corners];
       yCorners=new int[corners];
       xCorners[0]=-8;
-      xCorners[1]=16;
+      xCorners[1]=8;
       xCorners[2]=-8;
-      yCorners[0]=-8;
+      yCorners[0]=-4;
       yCorners[1]=0;
-      yCorners[2]=8;
+      yCorners[2]=4;
       myColor=color(51,255,51);   
       myCenterX=250;
        myCenterY=250; //holds center coordinates   
@@ -94,6 +147,17 @@ class SpaceShip extends Floater
       myDirectionX=0;
 
     }
+  public void checkCollision(){
+    for(int i =0;i<aBelt.length;i++){
+    if(s.myCenterY<aBelt[i].myCenterY+5&&s.myCenterY>aBelt[i].myCenterY-5){
+     s.dead=false;
+
+    }
+ 
+    
+
+    }
+  }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -223,6 +287,24 @@ for(int i =0;i<starFieldx.length;i++){
 
  
   ellipse(starFieldx[i],starFieldy[i],1,1);
+}
+
+}
+
+public void aCreate(){
+for(int i =0;i<aBelt.length;i++){
+aBelt[i]=new Asteroids();
+  
+}
+
+}
+public void aCycle(){
+for(int i =0;i<aBelt.length;i++){
+
+ 
+  aBelt[i].move();
+  aBelt[i].show();
+
 }
 
 }
