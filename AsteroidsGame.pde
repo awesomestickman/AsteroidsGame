@@ -4,6 +4,7 @@ boolean leftIsPressed = false;
 boolean rightIsPressed = false;
 boolean upIsPressed = false;
 boolean zIsPressed = false;
+boolean rIsPressed = false;
 boolean hyperSpeed=false;
 
 int deathTimer=6;
@@ -56,6 +57,15 @@ else{
     starCreate();
     aCreate();
     hyperSpeed=true;
+  }
+  if(rIsPressed==true){
+if(s.dead==true){
+    s.hyperSpace();
+    starCreate();
+    aCreate();
+    hyperSpeed=true;
+    s.dead=false;
+    }
   }
   else{
  hyperSpeed=false;
@@ -253,6 +263,10 @@ void keyPressed()
   {
     upIsPressed = true;
   }
+  else if(keyCode==82)
+  {
+    rIsPressed = true;
+  }
   else if(keyCode==90)
   {
     zIsPressed = true;
@@ -271,6 +285,10 @@ void keyReleased()
   else if (keyCode == 39)
   {
     rightIsPressed = false;
+  }
+  else if(keyCode==82)
+  {
+    rIsPressed = false;
   }
   else if  (keyCode==38)
   {
@@ -321,6 +339,7 @@ public void deathFlash(){
 if(deathTimer>3){
 
 text("You Have Died!", 400, 200);
+text("Press R to insert coin.", 394, 200);
 
 }
 deathTimer++;
