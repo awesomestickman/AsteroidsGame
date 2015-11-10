@@ -17,7 +17,7 @@ SpaceShip s;
 
 public void setup() 
 {
-
+noFill();
   size(800,500);
   starCreate();
   aCreate();
