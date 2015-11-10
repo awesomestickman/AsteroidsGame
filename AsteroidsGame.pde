@@ -58,7 +58,7 @@ else{
     aCreate();
     hyperSpeed=true;
   }
-  if(rIsPressed==true){
+  else if(rIsPressed==true){
 if(s.dead==true){
     s.hyperSpace();
     starCreate();
