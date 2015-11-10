@@ -6,6 +6,7 @@ boolean upIsPressed = false;
 boolean zIsPressed = false;
 boolean hyperSpeed=false;
 
+int deathTimer=6;
 
 int [] starFieldx = new int[50];
 int [] starFieldy = new int[50];
@@ -33,9 +34,14 @@ public void draw()
 starCycle();
 aCycle();
   //spaceship activate
-  if(dead=="false"){
+  if(s.dead==false){
   s.show();
   s.move();
+  s.checkCollision();
+}
+else{
+
+  deathFlash();
 }
  
   //key related stuff
@@ -109,9 +115,9 @@ rotate(rotSpeed);
 class SpaceShip extends Floater  
 {   
     //your code here
-     boolean dead;
+     protected boolean dead;
     public SpaceShip(){
-      dead="false";
+      dead=false;
       corners=3;  //the number of corners, a triangular floater has 3   
       xCorners=new int[corners];
       yCorners=new int[corners];
@@ -137,7 +143,7 @@ class SpaceShip extends Floater
     public void setDirectionY(double y){myDirectionY=y;}   
     public double getDirectionY(){return (double)myDirectionY;}   
     public void setPointDirection(int degrees){myPointDirection=degrees;}   
-    public double getPointDirection(){return (double)myPointDirection;} 
+    public double getPointDirection(){return (double)myPointDirection;}  
 
     public void hyperSpace(){
       myCenterX=(Math.random()*600)+50;
@@ -149,10 +155,12 @@ class SpaceShip extends Floater
     }
   public void checkCollision(){
     for(int i =0;i<aBelt.length;i++){
-    if(s.myCenterY<aBelt[i].myCenterY+5&&s.myCenterY>aBelt[i].myCenterY-5){
-     s.dead=false;
+    if(s.myCenterY<aBelt[i].myCenterY+10&&s.myCenterY>aBelt[i].myCenterY-10&&s.myCenterX<aBelt[i].myCenterX+10&&s.myCenterX>aBelt[i].myCenterX-10){
+     dead=true;
+     
 
     }
+
  
     
 
@@ -306,5 +314,19 @@ for(int i =0;i<aBelt.length;i++){
   aBelt[i].show();
 
 }
+
+}
+
+public void deathFlash(){
+if(deathTimer>3){
+
+text("You Have Died!", 400, 200);
+
+}
+deathTimer++;
+if(deathTimer>10){
+  deathTimer=-4;
+}
+
 
 }
