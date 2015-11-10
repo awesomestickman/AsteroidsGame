@@ -63,7 +63,7 @@ if(s.dead==true){
     s.hyperSpace();
     starCreate();
     aCreate();
-    hyperSpeed=true;
+    hyperSpeed=false;
     s.dead=false;
     }
   }
@@ -339,12 +339,12 @@ public void deathFlash(){
 if(deathTimer>3){
 
 text("You Have Died!", 400, 200);
-text("Press R to insert coin.", 394, 200);
+text("Press R to insert coin.", 394, 220);
 
 }
 deathTimer++;
-if(deathTimer>10){
-  deathTimer=-4;
+if(deathTimer>16){
+  deathTimer=-8;
 }
 
 
