@@ -8,7 +8,7 @@ boolean rIsPressed = false;
 boolean hyperSpeed=false;
 
 int score=0;
-int highScore=1092;
+int highScore=0;
 int deathTimer=6;
 
 int [] starFieldx = new int[50];
