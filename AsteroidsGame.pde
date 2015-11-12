@@ -7,12 +7,14 @@ boolean zIsPressed = false;
 boolean rIsPressed = false;
 boolean hyperSpeed=false;
 
+int score=0;
+int highScore=1092;
 int deathTimer=6;
 
 int [] starFieldx = new int[50];
 int [] starFieldy = new int[50];
 
-Asteroids [] aBelt = new Asteroids[10];
+Asteroids [] aBelt = new Asteroids[20];
 SpaceShip s;
 
 public void setup() 
@@ -44,6 +46,7 @@ else{
 
   deathFlash();
 }
+scoreDisplay();
  
   //key related stuff
   //rotation
@@ -65,6 +68,7 @@ if(s.dead==true){
     aCreate();
     hyperSpeed=false;
     s.dead=false;
+    score=0;
     }
   }
   else{
@@ -337,10 +341,11 @@ for(int i =0;i<aBelt.length;i++){
 
 public void deathFlash(){
 if(deathTimer>3){
-
-text("You Have Died!", 400, 200);
-text("Press R to insert coin.", 394, 220);
-
+fill(s.myColor);   
+stroke(s.myColor);  
+text("You Have Died!", 380, 200);
+text("Press R to insert coin.", 373, 220);
+noFill();
 }
 deathTimer++;
 if(deathTimer>16){
@@ -349,3 +354,28 @@ if(deathTimer>16){
 
 
 }
+public void scoreDisplay(){
+fill(s.myColor);   
+stroke(s.myColor); 
+if(s.dead==false){
+score++;
+text("score: "+score, 50, 50);
+text("highscore: "+highScore, 50, 80);
+
+}
+else if(deathTimer>3){
+
+text("score: "+score, 50, 50);
+text("highscore: "+highScore, 50, 80);
+
+
+
+}
+if(score>highScore){
+
+  highScore=score;
+  text("new highscore!!! ", 50, 100);
+}
+noFill();
+}
+
