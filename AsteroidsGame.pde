@@ -5,6 +5,7 @@ boolean rightIsPressed = false;
 boolean upIsPressed = false;
 boolean zIsPressed = false;
 boolean rIsPressed = false;
+boolean xIsPressed = false;
 boolean hyperSpeed=false;
 
 int score=0;
@@ -13,6 +14,7 @@ int deathTimer=6;
 
 int [] starFieldx = new int[50];
 int [] starFieldy = new int[50];
+ArrayList<Bullet> bullets=new ArrayList<Bullet>();
 
 Asteroids [] aBelt = new Asteroids[20];
 SpaceShip s;
@@ -36,6 +38,7 @@ public void draw()
 //stars
 starCycle();
 aCycle();
+bulletCycle();
   //spaceship activate
   if(s.dead==false){
   s.show();
@@ -53,6 +56,10 @@ scoreDisplay();
   if(leftIsPressed==true){
 
     s.rotate(-2);
+  }
+  if(xIsPressed==true){
+bullets.add(new Bullet(s.myCenterX,s.myCenterY,s.myDirectionX,s.myDirectionY,s.myPointDirection));
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   }
   if(zIsPressed==true){
 
@@ -82,6 +89,42 @@ if(s.dead==true){
 
     s.accelerate(0.1);
   }
+}
+class Bullet extends Floater
+{
+public Bullet(double cx, double cy, double dx, double dy, double d){
+    
+    corners=3;  //the number of corners, a triangular floater has 3   
+      xCorners=new int[corners];
+      yCorners=new int[corners];
+      xCorners[0]=0;
+      xCorners[1]=1;
+      xCorners[2]=2;
+       
+      yCorners[0]=3;
+      yCorners[1]=-1;
+      yCorners[2]=-1;
+      
+      myColor=color(51,255,51);   
+      myCenterX=cx;
+       myCenterY=cy; //holds center coordinates   
+      myDirectionX=dx;
+       myDirectionY=dy; //holds x and y coordinates of the vector for direction of travel   
+      myPointDirection=d;
+      accelerate(2);
+  }
+
+public int getX(){return (int)myCenterX;} 
+    public void setX(int x){myCenterX=x;}
+    public void setY(int y){myCenterY=y;}   
+    public int getY(){return (int)myCenterY;}   
+    public void setDirectionX(double x){myDirectionX=x;}   
+    public double getDirectionX(){return (double)myDirectionX;}   
+    public void setDirectionY(double y){myDirectionY=y;}   
+    public double getDirectionY(){return (double)myDirectionY;}   
+    public void setPointDirection(int degrees){myPointDirection=degrees;}   
+    public double getPointDirection(){return (double)myPointDirection;} 
+
 }
  class Asteroids extends Floater
    {
@@ -275,6 +318,10 @@ void keyPressed()
   {
     zIsPressed = true;
   }
+  else if(keyCode==88)
+  {
+    xIsPressed = true;
+  }
   else if (keyCode == 39)
   {
     rightIsPressed = true;
@@ -301,6 +348,10 @@ void keyReleased()
   else if(keyCode==90)
   {
     zIsPressed = false;
+  }
+  else if(keyCode==88)
+  {
+    xIsPressed = false;
   }
 }
 
@@ -379,3 +430,14 @@ if(score>highScore){
 noFill();
 }
 
+
+
+public void bulletCycle(){
+for(int i =0;i<bullets.size();i++){
+
+ Bullet currentBullet=bullets.get(i);
+  currentBullet.move();
+  currentBullet.show();
+
+}
+}
