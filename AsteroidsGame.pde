@@ -15,8 +15,11 @@ int deathTimer=6;
 int [] starFieldx = new int[50];
 int [] starFieldy = new int[50];
 ArrayList<Bullet> bullets=new ArrayList<Bullet>();
-
-Asteroids [] aBelt = new Asteroids[20];
+ArrayList<Asteroids> aBelt = new ArrayList<Asteroids>();
+ArrayList<SpaceShip> ais=new ArrayList<SpaceShip>();
+int aiSize=20;
+int aSize=10;
+//Asteroids [] aBelt = new Asteroids[20];
 SpaceShip s;
 
 public void setup() 
@@ -25,6 +28,7 @@ noFill();
   size(800,500);
   starCreate();
   aCreate();
+  aiCreate();
   
    s = new SpaceShip();
    
@@ -36,14 +40,17 @@ public void draw()
   background(0, 0, 0);
 }
 //stars
+aiCycle();
 starCycle();
 aCycle();
+aPopulate();
 bulletCycle();
   //spaceship activate
   if(s.dead==false){
   s.show();
   s.move();
   s.checkCollision();
+  s.bulletTimer();
 }
 else{
 
@@ -58,24 +65,37 @@ scoreDisplay();
     s.rotate(-2);
   }
   if(xIsPressed==true){
-bullets.add(new Bullet(s.myCenterX,s.myCenterY,s.myDirectionX,s.myDirectionY,s.myPointDirection));
+    if(s.dead==false){
+
+s.shoot();
+}
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   }
   if(zIsPressed==true){
 
     s.hyperSpace();
     starCreate();
+    //delete all as
+    aBelt=new ArrayList<Asteroids>();
     aCreate();
+     ais=new ArrayList<SpaceShip>();
+    aiCreate();
     hyperSpeed=true;
   }
   else if(rIsPressed==true){
 if(s.dead==true){
     s.hyperSpace();
     starCreate();
+    //delete all as
+    aBelt=new ArrayList<Asteroids>();
     aCreate();
+    ais=new ArrayList<SpaceShip>();
+    aiCreate();
     hyperSpeed=false;
     s.dead=false;
     score=0;
+    bullets=new ArrayList<Bullet>();
+  
     }
   }
   else{
@@ -92,8 +112,13 @@ if(s.dead==true){
 }
 class Bullet extends Floater
 {
-public Bullet(double cx, double cy, double dx, double dy, double d){
+  protected boolean dead;
+     protected int deathCounter;
+     protected SpaceShip mother;
+public Bullet(double cx, double cy, double dx, double dy, double d, SpaceShip m){
     
+    deathTimer=0;
+      dead=false;
     corners=3;  //the number of corners, a triangular floater has 3   
       xCorners=new int[corners];
       yCorners=new int[corners];
@@ -112,8 +137,44 @@ public Bullet(double cx, double cy, double dx, double dy, double d){
        myDirectionY=dy; //holds x and y coordinates of the vector for direction of travel   
       myPointDirection=d;
       accelerate(2);
+      mother=m;
   }
+  public void deathTimer(){
+deathCounter+=1;
+if(deathCounter>100){
 
+  dead=true;
+}
+ 
+
+
+
+  }
+  public void checkCollision(){
+    for(int i =0;i<aBelt.size();i++){
+    if(myCenterY<aBelt.get(i).myCenterY+10&&myCenterY>aBelt.get(i).myCenterY-10&&myCenterX<aBelt.get(i).myCenterX+10&&myCenterX>aBelt.get(i).myCenterX-10){
+     aBelt.remove(i);
+     i--;
+
+    }
+    }
+    if(s!=mother){
+    if(myCenterY<s.myCenterY+5&&myCenterY>s.myCenterY-5&&myCenterX<s.myCenterX+5&&myCenterX>s.myCenterX-5){
+     s.dead=true;
+
+    }
+  }
+   for(int i =0;i<ais.size();i++){
+    if (mother!=ais.get(i)){
+    if(myCenterY<ais.get(i).myCenterY+10&&myCenterY>ais.get(i).myCenterY-10&&myCenterX<ais.get(i).myCenterX+10&&myCenterX>ais.get(i).myCenterX-10){
+     ais.remove(i);
+     
+     i--;
+
+    }
+    }
+  }
+  }
 public int getX(){return (int)myCenterX;} 
     public void setX(int x){myCenterX=x;}
     public void setY(int y){myCenterY=y;}   
@@ -129,8 +190,10 @@ public int getX(){return (int)myCenterX;}
  class Asteroids extends Floater
    {
   private int rotSpeed;
+  private boolean dead;
 
   public Asteroids(){
+    dead=false;
     rotSpeed=(int)(Math.random()*10);
     corners=5;  //the number of corners, a triangular floater has 3   
       xCorners=new int[corners];
@@ -173,7 +236,9 @@ class SpaceShip extends Floater
 {   
     //your code here
      protected boolean dead;
+     protected int bulletCounter;
     public SpaceShip(){
+      bulletCounter=0;
       dead=false;
       corners=3;  //the number of corners, a triangular floater has 3   
       xCorners=new int[corners];
@@ -185,8 +250,8 @@ class SpaceShip extends Floater
       yCorners[1]=0;
       yCorners[2]=4;
       myColor=color(51,255,51);   
-      myCenterX=250;
-       myCenterY=250; //holds center coordinates   
+      myCenterX=(int)(Math.random()*800);
+       myCenterY=(int)(Math.random()*500); //holds center coordinates   
       myDirectionX=0;
        myDirectionY=0; //holds x and y coordinates of the vector for direction of travel   
       myPointDirection=0;
@@ -210,9 +275,22 @@ class SpaceShip extends Floater
       myDirectionX=0;
 
     }
+    public void bulletTimer(){
+      bulletCounter++;
+
+    }
+     public void shoot(){
+      if(bulletCounter>5){
+          bulletCounter=0;
+
+          bullets.add(new Bullet(s.myCenterX,s.myCenterY,s.myDirectionX,s.myDirectionY,s.myPointDirection,s));
+
+      }
+
+    }
   public void checkCollision(){
-    for(int i =0;i<aBelt.length;i++){
-    if(s.myCenterY<aBelt[i].myCenterY+10&&s.myCenterY>aBelt[i].myCenterY-10&&s.myCenterX<aBelt[i].myCenterX+10&&s.myCenterX>aBelt[i].myCenterX-10){
+    for(int i =0;i<aBelt.size();i++){
+    if(myCenterY<aBelt.get(i).myCenterY+10&&myCenterY>aBelt.get(i).myCenterY-10&&myCenterX<aBelt.get(i).myCenterX+10&&myCenterX>aBelt.get(i).myCenterX-10){
      dead=true;
      
 
@@ -373,18 +451,52 @@ for(int i =0;i<starFieldx.length;i++){
 }
 
 public void aCreate(){
-for(int i =0;i<aBelt.length;i++){
-aBelt[i]=new Asteroids();
+for(int i =0;i<aSize;i++){
+aBelt.add(new Asteroids());//=new Asteroids();
   
 }
 
 }
+public void aiCreate(){
+for(int i =0;i<aiSize;i++){
+ais.add(new SpaceShip());//=new Asteroids();
+  
+}
+
+}
+public void aiCycle(){
+for(int i =0;i<ais.size();i++){
+
+if(ais.get(i).dead==true){
+  ais.remove(i);
+  i--;
+ }
+ else{
+  ais.get(i).move();
+  ais.get(i).show();
+   ais.get(i).checkCollision();
+ }
+
+
+}
+
+}
+public void aPopulate(){
+if(aBelt.size()<aSize){
+Asteroids newAsteroid=new Asteroids();
+newAsteroid.myCenterX=0;
+newAsteroid.myCenterY=0;
+aBelt.add(newAsteroid);
+
+}
+
+}
 public void aCycle(){
-for(int i =0;i<aBelt.length;i++){
+for(int i =0;i<aBelt.size();i++){
 
  
-  aBelt[i].move();
-  aBelt[i].show();
+  aBelt.get(i).move();
+  aBelt.get(i).show();
 
 }
 
@@ -436,8 +548,16 @@ public void bulletCycle(){
 for(int i =0;i<bullets.size();i++){
 
  Bullet currentBullet=bullets.get(i);
+ if(currentBullet.dead==false){
   currentBullet.move();
   currentBullet.show();
-
+  currentBullet.deathTimer();
+  currentBullet.checkCollision();
+}
+else{
+  bullets.remove(i);
+  i--;
+}
+System.out.println(bullets.size());
 }
 }
