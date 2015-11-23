@@ -17,7 +17,7 @@ int [] starFieldy = new int[50];
 ArrayList<Bullet> bullets=new ArrayList<Bullet>();
 ArrayList<Asteroids> aBelt = new ArrayList<Asteroids>();
 ArrayList<SpaceShip> ais=new ArrayList<SpaceShip>();
-int aiSize=20;
+int aiSize=3;
 int aSize=10;
 //Asteroids [] aBelt = new Asteroids[20];
 SpaceShip s;
@@ -44,6 +44,7 @@ aiCycle();
 starCycle();
 aCycle();
 aPopulate();
+aiPopulate();
 bulletCycle();
   //spaceship activate
   if(s.dead==false){
@@ -51,11 +52,11 @@ bulletCycle();
   s.move();
   s.checkCollision();
   s.bulletTimer();
-}
-else{
+  }
+   else{
 
   deathFlash();
-}
+   }
 scoreDisplay();
  
   //key related stuff
@@ -117,7 +118,7 @@ class Bullet extends Floater
      protected SpaceShip mother;
 public Bullet(double cx, double cy, double dx, double dy, double d, SpaceShip m){
     
-    deathTimer=0;
+    
       dead=false;
     corners=3;  //the number of corners, a triangular floater has 3   
       xCorners=new int[corners];
@@ -275,6 +276,40 @@ class SpaceShip extends Floater
       myDirectionX=0;
 
     }
+    public void aiBuild(){
+      corners=3;  //the number of corners, a triangular floater has 3   
+      xCorners=new int[corners];
+      yCorners=new int[corners];
+      xCorners[0]=-8;
+      xCorners[1]=9;
+      xCorners[2]=-8;
+      yCorners[0]=-2;
+      yCorners[1]=0;
+      yCorners[2]=2;
+
+
+    }
+    public void aiTarget(){
+      double dRadians =myPointDirection*(Math.PI/180);     
+      double newDeg=0;
+     float xdif=(float)(s.myCenterX-myCenterX);
+      float ydif=(float)(s.myCenterY-myCenterY);
+      if(xdif!=0){
+
+        newDeg=atan(ydif/xdif);
+      }
+      if(xdif<0){
+
+        newDeg+=Math.PI;
+      }
+
+
+
+      newDeg=newDeg*(180/Math.PI);
+      myPointDirection=(double)newDeg;
+
+
+    }
     public void bulletTimer(){
       bulletCounter++;
 
@@ -283,7 +318,7 @@ class SpaceShip extends Floater
       if(bulletCounter>5){
           bulletCounter=0;
 
-          bullets.add(new Bullet(s.myCenterX,s.myCenterY,s.myDirectionX,s.myDirectionY,s.myPointDirection,s));
+          bullets.add(new Bullet(myCenterX,myCenterY,myDirectionX,myDirectionY,myPointDirection,this));
 
       }
 
@@ -459,7 +494,9 @@ aBelt.add(new Asteroids());//=new Asteroids();
 }
 public void aiCreate(){
 for(int i =0;i<aiSize;i++){
-ais.add(new SpaceShip());//=new Asteroids();
+  SpaceShip adder = new SpaceShip();
+  adder.aiBuild();
+ais.add(adder);//=new Asteroids();
   
 }
 
@@ -475,8 +512,21 @@ if(ais.get(i).dead==true){
   ais.get(i).move();
   ais.get(i).show();
    ais.get(i).checkCollision();
+   ais.get(i).aiTarget();
+   ais.get(i).accelerate(0.01);
+   ais.get(i).shoot();
+   ais.get(i).bulletTimer();
  }
 
+
+}
+
+}
+public void aiPopulate(){
+if(ais.size()<aSize){
+SpaceShip adder = new SpaceShip();
+  adder.aiBuild();
+ais.add(adder);
 
 }
 
@@ -503,16 +553,16 @@ for(int i =0;i<aBelt.size();i++){
 }
 
 public void deathFlash(){
-if(deathTimer>3){
+if(deathTimer>30){
 fill(s.myColor);   
 stroke(s.myColor);  
 text("You Have Died!", 380, 200);
 text("Press R to insert coin.", 373, 220);
 noFill();
 }
-deathTimer++;
-if(deathTimer>16){
-  deathTimer=-8;
+deathTimer+=1;
+if(deathTimer>50){
+  deathTimer=0;
 }
 
 
@@ -526,7 +576,7 @@ text("score: "+score, 50, 50);
 text("highscore: "+highScore, 50, 80);
 
 }
-else if(deathTimer>3){
+else if(deathTimer>30){
 
 text("score: "+score, 50, 50);
 text("highscore: "+highScore, 50, 80);
