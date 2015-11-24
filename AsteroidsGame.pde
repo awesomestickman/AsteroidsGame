@@ -8,6 +8,8 @@ boolean rIsPressed = false;
 boolean xIsPressed = false;
 boolean hyperSpeed=false;
 
+int progressTimer=0;
+int progressReset=200;
 int score=0;
 int highScore=0;
 int deathTimer=6;
@@ -17,6 +19,8 @@ int [] starFieldy = new int[50];
 ArrayList<Bullet> bullets=new ArrayList<Bullet>();
 ArrayList<Asteroids> aBelt = new ArrayList<Asteroids>();
 ArrayList<SpaceShip> ais=new ArrayList<SpaceShip>();
+int trueaiSize=3;
+int trueaSize=10;
 int aiSize=3;
 int aSize=10;
 //Asteroids [] aBelt = new Asteroids[20];
@@ -39,6 +43,7 @@ public void draw()
   if(hyperSpeed==false){
   background(0, 0, 0);
 }
+gameProgress();
 //stars
 aiCycle();
 starCycle();
@@ -85,6 +90,8 @@ s.shoot();
   }
   else if(rIsPressed==true){
 if(s.dead==true){
+   aiSize=trueaiSize;
+    aSize=trueaSize;
     s.hyperSpace();
     starCreate();
     //delete all as
@@ -96,6 +103,7 @@ if(s.dead==true){
     s.dead=false;
     score=0;
     bullets=new ArrayList<Bullet>();
+
   
     }
   }
@@ -523,7 +531,7 @@ if(ais.get(i).dead==true){
 
 }
 public void aiPopulate(){
-if(ais.size()<aSize){
+if(ais.size()<aiSize){
 SpaceShip adder = new SpaceShip();
   adder.aiBuild();
 ais.add(adder);
@@ -592,7 +600,17 @@ if(score>highScore){
 noFill();
 }
 
+public void gameProgress(){
 
+progressTimer++;
+if(progressTimer>progressReset){
+
+  aSize++;
+  aiSize++;
+  progressTimer=0;
+}
+
+}
 
 public void bulletCycle(){
 for(int i =0;i<bullets.size();i++){
