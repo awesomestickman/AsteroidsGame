@@ -608,6 +608,6 @@ else{
   bullets.remove(i);
   i--;
 }
-System.out.println(bullets.size());
+
 }
 }
